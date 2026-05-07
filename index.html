@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقرير المراحل  |  Stages Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7fb;
+  --surface:#ffffff;
+  --ink:#0f1b2d;
+  --ink-2:#465169;
+  --muted:#7a8499;
+  --line:#e7eaf2;
+  --brand:#3b5bdb;
+  --brand-soft:#eef1ff;
+  --green:#10b981;
+  --green-soft:#ecfdf5;
+  --yellow:#f59e0b;
+  --yellow-soft:#fffbeb;
+  --orange:#f97316;
+  --orange-soft:#fff7ed;
+  --red:#ef4444;
+  --red-soft:#fef2f2;
+  --purple:#8b5cf6;
+  --purple-soft:#f5f3ff;
+  --teal:#14b8a6;
+  --teal-soft:#f0fdfa;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Cairo','Inter',system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.6}
+a{color:var(--brand);text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+
+/* Header */
+.hero{background:linear-gradient(135deg,#1e3a8a 0%,#3b5bdb 50%,#6366f1 100%);color:#fff;padding:48px 0 56px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(255,255,255,.15),transparent 50%);pointer-events:none}
+.hero h1{margin:0 0 6px;font-size:34px;font-weight:800;letter-spacing:-.5px}
+.hero h2{margin:0 0 16px;font-size:18px;font-weight:500;opacity:.9}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.hero .chip{background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500}
+
+/* Sticky nav */
+.nav{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);z-index:50}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:10px 24px;scrollbar-width:thin}
+.nav a{flex:0 0 auto;padding:8px 14px;border-radius:8px;color:var(--ink-2);font-weight:600;font-size:13px;border:1px solid transparent;white-space:nowrap;transition:all .15s}
+.nav a:hover{background:var(--brand-soft);color:var(--brand)}
+.nav a.active{background:var(--brand);color:#fff}
+
+/* Search */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px;align-items:center}
+.search{flex:1;min-width:240px;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.search input{border:0;outline:0;width:100%;font:inherit;background:transparent;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px}
+.legend .pill{font-size:12px;font-weight:600;padding:5px 10px;border-radius:999px}
+
+/* Stage card */
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:16px;margin:18px 0;overflow:hidden;box-shadow:0 1px 2px rgba(15,27,45,.04)}
+.stage-head{display:flex;align-items:center;gap:14px;padding:20px 24px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fafbff,#fff)}
+.stage-num{flex:0 0 auto;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+.stage-titles{flex:1;min-width:0}
+.stage-titles h3{margin:0;font-size:20px;font-weight:800}
+.stage-titles .en{color:var(--muted);font-size:14px;font-weight:500}
+.stage-body{padding:20px 24px}
+.stage-desc{color:var(--ink-2);margin:0 0 18px;font-size:14.5px}
+
+/* Two-col grid */
+.two-col{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+@media (max-width:860px){.two-col{grid-template-columns:1fr}}
+.panel{background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.panel h4{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--ink-2);display:flex;align-items:center;gap:8px}
+.panel h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--brand)}
+
+/* Sub-stage chips */
+.subs{display:flex;flex-wrap:wrap;gap:8px}
+.sub{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:8px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--ink-2)}
+.sub .ar{color:var(--ink)}
+.sub .en{color:var(--muted);font-weight:500;font-size:12px}
+.sub.success{background:var(--green-soft);border-color:#bbf7d0;color:#065f46}
+.sub.success .ar,.sub.success .en{color:#065f46}
+.sub.warn{background:var(--yellow-soft);border-color:#fde68a;color:#92400e}
+.sub.warn .ar,.sub.warn .en{color:#92400e}
+.sub.danger{background:var(--red-soft);border-color:#fecaca;color:#991b1b}
+.sub.danger .ar,.sub.danger .en{color:#991b1b}
+.sub.info{background:var(--brand-soft);border-color:#c7d2fe;color:#3730a3}
+.sub.info .ar,.sub.info .en{color:#3730a3}
+.sub.purple{background:var(--purple-soft);border-color:#ddd6fe;color:#5b21b6}
+.sub.purple .ar,.sub.purple .en{color:#5b21b6}
+
+/* Responsibilities list */
+.resp{counter-reset:r;list-style:none;padding:0;margin:0}
+.resp li{counter-increment:r;display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.resp li:last-child{border-bottom:0}
+.resp li::before{content:counter(r);flex:0 0 auto;width:24px;height:24px;background:var(--brand-soft);color:var(--brand);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px}
+.resp .ar{color:var(--ink);font-weight:600;font-size:14px}
+.resp .en{color:var(--muted);font-size:12.5px;font-weight:500}
+
+/* Stage colors */
+.c1{background:linear-gradient(135deg,#3b82f6,#2563eb)}
+.c2{background:linear-gradient(135deg,#06b6d4,#0891b2)}
+.c3{background:linear-gradient(135deg,#14b8a6,#0d9488)}
+.c4{background:linear-gradient(135deg,#f59e0b,#d97706)}
+.c5{background:linear-gradient(135deg,#8b5cf6,#7c3aed)}
+.c6{background:linear-gradient(135deg,#10b981,#059669)}
+.c7{background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+/* Rejected callout */
+.rejected{margin:18px 0;border:2px solid #fecaca;border-radius:16px;background:linear-gradient(180deg,#fef2f2,#fff);overflow:hidden}
+.rejected-head{padding:16px 24px;background:#fee2e2;display:flex;align-items:center;gap:12px;border-bottom:1px solid #fecaca}
+.rejected-head .icon{width:38px;height:38px;background:#dc2626;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800}
+.rejected-head h4{margin:0;color:#991b1b;font-size:16px;font-weight:800}
+.rejected-head .badge{margin-inline-start:auto;background:#fff;color:#991b1b;border:1px solid #fecaca;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.rejected-body{padding:18px 24px}
+.why-q{margin:0 0 12px;font-size:14px;font-weight:700;color:#7f1d1d;display:flex;align-items:center;gap:8px}
+.why-q .q{width:24px;height:24px;background:#dc2626;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+.reasons{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.reason{background:#fff;border:1px solid #fecaca;border-radius:10px;padding:12px 14px;position:relative}
+.reason .name{font-weight:700;color:#991b1b;font-size:14px}
+.reason .name .en{color:#dc2626;font-weight:500;font-size:12.5px;display:block;margin-top:2px}
+.reason.has-sub{grid-column:1 / -1;background:linear-gradient(180deg,#fff,#fef2f2)}
+.subreasons{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+.subreason{background:#fef2f2;border:1px dashed #fca5a5;border-radius:8px;padding:8px 12px;font-size:13px}
+.subreason .ar{color:#7f1d1d;font-weight:600}
+.subreason .en{color:#dc2626;font-size:11.5px;display:block}
+
+/* Levels (Adoption) */
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.level{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+.level h5{margin:0 0 8px;font-size:14px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.level h5 .lv{background:var(--purple-soft);color:#5b21b6;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:800}
+.level .score{display:inline-block;background:var(--brand-soft);color:var(--brand);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;margin-inline-start:6px}
+
+/* Maturity */
+.maturity{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
+.mat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.mat .num{font-size:22px;font-weight:800}
+.mat .lbl{font-size:12px;color:var(--muted);font-weight:600}
+.mat.l1 .num{color:#ef4444}
+.mat.l2 .num{color:#f59e0b}
+.mat.l3 .num{color:#3b82f6}
+.mat.l4 .num{color:#10b981}
+
+/* Footer */
+.footer{margin-top:40px;padding:24px;text-align:center;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+
+/* Hide on filter */
+.stage.hidden{display:none}
+.sub.dim{opacity:.25}
+
+/* Counts */
+.count-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+.count{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.count .n{font-size:22px;font-weight:800;color:var(--brand)}
+.count .l{font-size:12.5px;color:var(--muted);font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <h1> المراحل الرئيسية والفرعية  </h1>
+    <h2>CSM Stages Report — Roles &amp; Responsibilities per Stage</h2>
+    <div class="meta">
+      <span class="chip">قسم ضمان الجودة | Quality Assurance</span>
+      <span class="chip">إصدار V2 — مايو 2026</span>
+      <span class="chip">٦ مراحل رئيسية</span>
+      <span class="chip">يشمل: Rejected Reasons</span>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#overview" class="active">نظرة عامة</a>
+    <a href="#s1">١. CSM Handover</a>
+    <a href="#s2">٢. Inventory</a>
+    <a href="#s3">٣. Training</a>
+    <a href="#s4">٤. Business Readiness</a>  
+    <a href="#s6">5. Adoption</a>
+    <a href="#rejected">⚠ Rejected Reasons</a>
+    <a href="#s7">٦. Renewal</a>
+  </div>
+</nav>
+
+<main class="container">
+
+  <section id="overview">
+    <div class="toolbar">
+      <div class="search">
+        <span>🔍</span>
+        <input id="q" type="text" placeholder="ابحث في المراحل، المهام، أو الأسباب… | Search stages, tasks, reasons…">
+      </div>
+      <div class="legend">
+        <span class="pill" style="background:var(--green-soft);color:#065f46">✓ مكتمل</span>
+        <span class="pill" style="background:var(--yellow-soft);color:#92400e">⚠ قيد التنفيذ</span>
+        <span class="pill" style="background:var(--red-soft);color:#991b1b">✕ خطر / استرداد</span>
+        <span class="pill" style="background:var(--brand-soft);color:#3730a3">← انتقال</span>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head">
+        <div class="stage-num c1">i</div>
+        <div class="stage-titles">
+          <h3>نظرة عامة على الرحلة | Customer Journey Overview</h3>
+          <div class="en">من تسليم العميل إلى التجديد — ٦ مراحل رئيسية</div>
+        </div>
+      </div>
+      <div class="stage-body">
+        <p class="stage-desc">يغطي هذا التقرير الهيكل الكامل لمراحل إدارة نجاح العملاء (CSM) المعتمد في المنظومة، ويوضح دور موظف نجاح العملاء في كل مرحلة من المراحل الرئيسية، ابتداءً من استلام العميل وانتهاءً بمرحلة التجديد، بما يشمل أسباب الرفض (Rejected Reasons) المضافة حديثاً.</p>
+        <div class="count-grid">
+          <div class="count"><div class="n">6</div><div class="l">مراحل رئيسية</div></div>
+          <div class="count"><div class="n">38+</div><div class="l">مرحلة فرعية</div></div>
+          <div class="count"><div class="n">3</div><div class="l">مستويات Adoption</div></div>
+          <div class="count"><div class="n">5</div><div class="l">أسباب رفض رئيسية</div></div>
+          <div class="count"><div class="n">6</div><div class="l">أسباب فرعية للميزات</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 1: CSM Handover -->
+  <section id="s1" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c1">1</div>
+      <div class="stage-titles">
+        <h3>تسليم العميل للـ CSM</h3>
+        <div class="en">CSM Handover</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">المرحلة الأولى في رحلة العميل، حيث يُسلَّم العميل من فريق المبيعات إلى مختص نجاح العملاء.<br><span class="en" style="color:var(--muted)">The first stage where the client is handed over from the sales team to the CSM specialist</span></p>
+
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub success"><span class="ar">تم الترحيب</span><span class="en">Welcomed</span></span>
+            <span class="sub warn"><span class="ar">لا يوجد رد</span><span class="en">No Response</span></span>
+            <span class="sub danger"><span class="ar">طلب استرداد</span><span class="en">Requested Refund</span></span>
+            <span class="sub success"><span class="ar">تم إتمام التسليم</span><span class="en">Handover is Done</span></span>
+            <span class="sub danger"><span class="ar">في خطر</span><span class="en">At Risk</span></span>
+            <span class="sub warn"><span class="ar">النشاط غير جاهز</span><span class="en">Business is Not Ready</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">استلام ملف العميل كاملاً من فريق المبيعات</div><div class="en">Receive the full client file from the sales team</div></div></li>
+            <li><div><div class="ar">الاطلاع على تفاصيل العقد والاحتياجات المتفق عليها</div><div class="en">Review contract details and agreed requirements</div></div></li>
+            <li><div><div class="ar">التواصل مع العميل خلال 24 ساعة من الاستلام</div><div class="en">Contact the client within 24 hours of handover</div></div></li>
+            <li><div><div class="ar">تقديم نفسه وشرح دوره كمرجع أساسي للعميل</div><div class="en">Introduce himself as the main point of contact</div></div></li>
+            <li><div><div class="ar">تحديد توقعات العميل ووضع خطة عمل أولية</div><div class="en">Identify expectations and set an initial action plan</div></div></li>
+            <li><div><div class="ar">توثيق حالة العميل وتصنيفه في النظام (CRM / Intercom)</div><div class="en">Document client status in CRM / Intercom</div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 2: Inventory Checkup -->
+  <section id="s2" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c2">2</div>
+      <div class="stage-titles">
+        <h3>فحص المخزون</h3>
+        <div class="en">Inventory Checkup</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">مرحلة التحقق من جاهزية بيانات المخزون وإعداد النظام لبدء التشغيل.<br><span class="en" style="color:var(--muted)">Verifying inventory data readiness and preparing the system for go-live.</span></p>
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub warn"><span class="ar">قيد التنفيذ — انتظار الأجهزة</span><span class="en">In progress — Waiting for Devices</span></span>
+            <span class="sub warn"><span class="ar">قيد التنفيذ — لا يوجد رد</span><span class="en">In progress — No Response</span></span>
+            <span class="sub warn"><span class="ar">قيد التنفيذ — انتظار العميل</span><span class="en">In progress — Awaiting Client Action</span></span>
+            <span class="sub warn"><span class="ar">قيد التنفيذ — رفع المنتجات</span><span class="en">In progress — Products Upload / Setup</span></span>
+            <span class="sub warn"><span class="ar">قيد التنفيذ — مشكلة</span><span class="en">In progress — Issue / Problem</span></span>
+            <span class="sub warn"><span class="ar">قيد التنفيذ — التدريب</span><span class="en">In progress — Training Pending</span></span>
+            <span class="sub info"><span class="ar">تم الإرجاع للمبيعات</span><span class="en">Reverted Back to Sales</span></span>
+            <span class="sub danger"><span class="ar">طلب استرداد</span><span class="en">Requested Refund</span></span>
+            <span class="sub danger"><span class="ar">في خطر</span><span class="en">At Risk</span></span>
+            <span class="sub success"><span class="ar">تم الفحص</span><span class="en">Checkup is Done</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">مراجعة بيانات المخزون مع العميل والتحقق من اكتمالها</div><div class="en">Review inventory data and verify completeness</div></div></li>
+            <li><div><div class="ar">دعم العميل في رفع وتصنيف بيانات المنتجات بشكل صحيح</div><div class="en">Support uploading and classifying products</div></div></li>
+            <li><div><div class="ar">التنسيق مع الفرق التقنية عند وجود مشكلات في الاستيراد</div><div class="en">Coordinate with technical teams for import issues</div></div></li>
+            <li><div><div class="ar">متابعة حالة المخزون وتحديث Sub Stage في النظام</div><div class="en">Monitor inventory status and update Sub Stage</div></div></li>
+            <li><div><div class="ar">إبلاغ العميل بأي فجوات أو متطلبات ناقصة</div><div class="en">Notify the client of any gaps or missing requirements</div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 3: Training -->
+  <section id="s3" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c3">3</div>
+      <div class="stage-titles">
+        <h3>التدريب</h3>
+        <div class="en">Training</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">تأهيل العميل وفريقه على استخدام النظام بشكل صحيح وفعّال.<br><span class="en" style="color:var(--muted)">Qualifying the client and their team to use the system correctly and effectively.</span></p>
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub info"><span class="ar">تمت دعوة لندوة</span><span class="en">Webinar Invitation Sent</span></span>
+            <span class="sub info"><span class="ar">جلسة فردية مجانية</span><span class="en">Free 1on1</span></span>
+            <span class="sub info"><span class="ar">جلسة فردية مدفوعة</span><span class="en">Paid 1on1</span></span>
+            <span class="sub info"><span class="ar">زيارة ميدانية مجانية</span><span class="en">Free Field Visit</span></span>
+            <span class="sub success"><span class="ar">تم التدريب</span><span class="en">Training is Done</span></span>
+            <span class="sub danger"><span class="ar">طلب استرداد</span><span class="en">Requested Refund</span></span>
+            <span class="sub danger"><span class="ar">في خطر</span><span class="en">At Risk</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">تقييم مستوى العميل ووضع خطة تدريبية مناسبة</div><div class="en">Assess client level and create a training plan</div></div></li>
+            <li><div><div class="ar">تقديم الجلسات التدريبية (فردية، مجموعة، ميدانية، ندوة)</div><div class="en">Deliver training sessions (1on1, group, field, webinar)</div></div></li>
+            <li><div><div class="ar">التأكد من فهم العميل للمميزات الأساسية للنظام</div><div class="en">Ensure understanding of core system features</div></div></li>
+            <li><div><div class="ar">إرسال مواد داعمة ومرجعية بعد كل جلسة</div><div class="en">Send supporting reference materials after sessions</div></div></li>
+            <li><div><div class="ar">قياس فهم العميل بعد التدريب والتحقق من الاستيعاب</div><div class="en">Measure post-training comprehension</div></div></li>
+            <li><div><div class="ar">توثيق نوع التدريب المقدم وتاريخه في النظام</div><div class="en">Document training type and date in the system</div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 4: Business Readiness -->
+  <section id="s4" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c4">4</div>
+      <div class="stage-titles">
+        <h3>الجاهزية التجارية</h3>
+        <div class="en">Business Readiness</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">التحقق من أن بيئة عمل العميل جاهزة لبدء الاستخدام الفعلي للنظام.<br><span class="en" style="color:var(--muted)">Ensuring the client's business environment is ready for actual system usage.</span></p>
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub warn"><span class="ar">النشاط غير جاهز</span><span class="en">Business is Not Ready</span></span>
+            <span class="sub warn"><span class="ar">تأخير من العميل</span><span class="en">Delayed by Customer</span></span>
+            <span class="sub warn"><span class="ar">ميزة مفقودة</span><span class="en">Missing Feature</span></span>
+            <span class="sub warn"><span class="ar">مشكلة تقنية</span><span class="en">Technical Issue</span></span>
+            <span class="sub warn"><span class="ar">يستخدم نظاماً مختلفاً</span><span class="en">Using Different System</span></span>
+            <span class="sub warn"><span class="ar">تأخير من رواء باي</span><span class="en">Delayed by Rewaapay</span></span>
+            <span class="sub warn"><span class="ar">تأخير بسبب الأجهزة</span><span class="en">Delayed by Hardware</span></span>
+            <span class="sub warn"><span class="ar">الإعداد غير مكتمل</span><span class="en">Setup is Incomplete</span></span>
+            <span class="sub danger"><span class="ar">طلب استرداد</span><span class="en">Requested Refund</span></span>
+            <span class="sub danger"><span class="ar">في خطر</span><span class="en">At Risk</span></span>
+            <span class="sub success"><span class="ar">تم إنهاء ما قبل التشغيل</span><span class="en">Pre-Adoption is Done</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">تقييم جاهزية العميل من الناحية التشغيلية والتقنية</div><div class="en">Assess operational and technical readiness</div></div></li>
+            <li><div><div class="ar">تحديد سبب التأخير وتصنيفه بدقة في Sub Stage</div><div class="en">Identify and classify the delay reason</div></div></li>
+            <li><div><div class="ar">التنسيق مع الفرق الداخلية لحل المعوقات (تقنية، أجهزة، ميزات)</div><div class="en">Coordinate to resolve blockers (tech, hardware, features)</div></div></li>
+            <li><div><div class="ar">وضع جدول زمني واضح للوصول لمرحلة الجاهزية</div><div class="en">Set a clear timeline to reach readiness</div></div></li>
+            <li><div><div class="ar">متابعة العميل بشكل دوري لتجنب الركود</div><div class="en">Follow up regularly to avoid stagnation</div></div></li>
+            <li><div><div class="ar">توثيق كل عائق وما تم اتخاذه من إجراءات</div><div class="en">Document every blocker and actions taken</div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 5: Pre-Adoption -->
+  <section id="s5" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c5">5</div>
+      <div class="stage-titles">
+        <h3>ما قبل التشغيل</h3>
+        <div class="en">Pre-Adoption</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">مرحلة انتقالية تسبق التشغيل الفعلي، يتم فيها التحقق من اكتمال كل متطلبات الإطلاق.<br><span class="en" style="color:var(--muted)">A transitional stage before actual adoption, verifying all launch requirements are complete.</span></p>
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub success"><span class="ar">تم إنهاء مرحلة ما قبل التشغيل</span><span class="en">Pre-Adoption is Done</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">مراجعة شاملة لكل مراحل Onboarding السابقة</div><div class="en">Conduct a full review of all previous onboarding stages</div></div></li>
+            <li><div><div class="ar">التأكد من استيفاء جميع الشروط اللازمة للتشغيل</div><div class="en">Confirm all necessary conditions for adoption are met</div></div></li>           
+            <li><div><div class="ar">التنسيق مع العميل لتحديد موعد الإطلاق الرسمي</div><div class="en">Set the official go-live date</div></div></li>
+            <li><div><div class="ar">ضمان عدم وجود عوائق معلقة قبل الانتقال</div><div class="en">Ensure no pending blockers before transition</div></div></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 6: Adoption -->
+  <section id="s6" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c6">6</div>
+      <div class="stage-titles">
+        <h3>التشغيل</h3>
+        <div class="en">Adoption — 3 Maturity Levels</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">المرحلة الأساسية التي يبدأ فيها العميل الاستخدام الفعلي للنظام، وتنقسم إلى ٣ مستويات نضج (Maturity Levels).<br><span class="en" style="color:var(--muted)">The core stage where the client begins actual system usage — split into 3 maturity levels.</span></p>
+
+      <div class="levels">
+        <div class="level">
+          <h5>Level 1 <span class="lv">L1</span> <span class="score">Score 1.0</span></h5>
+          <div style="font-weight:700;color:var(--ink-2);font-size:13px;margin-bottom:6px">Adoption Started</div>
+          <div style="color:var(--muted);font-size:12.5px">بدء التشغيل الفعلي للنظام</div>
+        </div>
+        <div class="level">
+          <h5>Level 2 <span class="lv">L2</span> <span class="score">Score 2.0</span></h5>
+          <div style="font-weight:700;color:var(--ink-2);font-size:13px;margin-bottom:6px">Daily Use</div>
+          <div style="color:var(--muted);font-size:12.5px">الاستخدام اليومي المنتظم</div>
+        </div>
+        <div class="level">
+          <h5>Level 3 <span class="lv">L3</span> <span class="score">Score 3.0</span></h5>
+          <div style="font-weight:700;color:var(--ink-2);font-size:13px;margin-bottom:6px">Feature Activation</div>
+          <div style="color:var(--muted);font-size:12.5px">تفعيل المميزات المتقدمة</div>
+        </div>
+        <div class="level" style="border-color:#a7f3d0;background:#ecfdf5">
+          <h5>Adopted <span class="lv" style="background:#d1fae5;color:#065f46">A</span> <span class="score" style="background:#d1fae5;color:#065f46">Score 4.0</span></h5>
+          <div style="font-weight:700;color:#065f46;font-size:13px;margin-bottom:6px">Customer Adopted</div>
+          <div style="color:#047857;font-size:12.5px">العميل اعتمد النظام بالكامل</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h4><span class="dot"></span>المراحل الفرعية المشتركة عبر المستويات | Shared Sub Stages (across L1/L2/L3)</h4>
+        <div class="subs">
+          <span class="sub warn"><span class="ar">قيد التنفيذ</span><span class="en">In progress</span></span>
+          <span class="sub warn"><span class="ar">تأخير من العميل</span><span class="en">Delayed by Client</span></span>
+          <span class="sub info"><span class="ar">طلب عرض توضيحي</span><span class="en">Requested Demo</span></span>
+          <span class="sub warn"><span class="ar">انتظار رد العميل</span><span class="en">Waiting for customer response</span></span>
+          <span class="sub info"><span class="ar">ترقية قيد التنفيذ</span><span class="en">Upgrade in progress</span></span>
+          <span class="sub warn"><span class="ar">انتظار الدعم الفني</span><span class="en">Waiting for technical support</span></span>
+          <span class="sub warn"><span class="ar">يحتاج موافقة الإدارة العليا</span><span class="en">Needs upper management approval</span></span>
+          <span class="sub danger"><span class="ar">مرفوض</span><span class="en">Rejected</span></span>
+          <span class="sub purple"><span class="ar">QBR آخر +90 يوم</span><span class="en">QBR Last 90+ days</span></span>
+          <span class="sub purple"><span class="ar">إعادة تنشيط التشغيل</span><span class="en">Maturity Reactivation</span></span>
+          <span class="sub info"><span class="ar">قفز وحدتين</span><span class="en">Jumped 2 Modules</span></span>
+          <span class="sub info"><span class="ar">قفز ٣ وحدات</span><span class="en">Jumped 3 Modules</span></span>
+          <span class="sub info"><span class="ar">قفز ٤ وحدات</span><span class="en">Jumped 4 Modules</span></span>
+          <span class="sub danger"><span class="ar">طلب استرداد</span><span class="en">Requested Refund</span></span>
+          <span class="sub danger"><span class="ar">في خطر</span><span class="en">At Risk</span></span>
+          <span class="sub success"><span class="ar">قيد التشغيل</span><span class="en">Adopting</span></span>
+        </div>
+      </div>
+
+      <!-- ===== REJECTED REASONS BLOCK ===== -->
+      <div id="rejected" class="rejected">
+        <div class="rejected-head">
+          <div class="icon">!</div>
+          <h4>أسباب الرفض | Rejected Reasons</h4>
+          <span class="badge">Multi-selection</span>
+        </div>
+        <div class="rejected-body">
+          <div class="why-q"><span class="q">?</span> Why? — لماذا تم الرفض؟</div>
+          <p style="margin:0 0 14px;color:#7f1d1d;font-size:13.5px">عند اختيار حالة <strong>Rejected</strong> في أي من مستويات Adoption (L1 / L2 / L3)، يجب على المستخدم تحديد سبب أو أكثر من الأسباب التالية:</p>
+
+          <div class="reasons">
+            <div class="reason">
+              <div class="name">Outsourcing<span class="en">نظام خارجي / استعانة بمصادر خارجية</span></div>
+            </div>
+            <div class="reason">
+              <div class="name">Does Not Have Ability<span class="en">عدم توفر القدرة</span></div>
+            </div>
+            <div class="reason">
+              <div class="name">Too Complex<span class="en">معقد للغاية</span></div>
+            </div>
+            <div class="reason">
+              <div class="name">Not Relevant to Business Type<span class="en">غير مناسب لنوع النشاط التجاري</span></div>
+            </div>
+
+            <div class="reason has-sub">
+              <div class="name">Feature Not Meeting Needs<span class="en">الميزة لا تلبي الاحتياجات</span></div>
+              <div class="why-q" style="margin:14px 0 8px;font-size:13px"><span class="q" style="background:#dc2626">↲</span> اختيار فرعي متعدد | Sub multi-selection</div>
+              <div class="subreasons">
+                <div class="subreason">
+                  <span class="ar">العمليات الأساسية للنشاط غير مدعومة</span>
+                  <span class="en">Core business operations not supported</span>
+                </div>
+                <div class="subreason">
+                  <span class="ar">التقارير والتحليلات غير كافية</span>
+                  <span class="en">Insufficient reporting &amp; analytics</span>
+                </div>
+                <div class="subreason">
+                  <span class="ar">لا يوجد تكامل مع أنظمة أو خدمات أخرى</span>
+                  <span class="en">Lack of integrations with other systems/services</span>
+                </div>
+                <div class="subreason">
+                  <span class="ar">تخصيص وصلاحيات المستخدمين محدودة</span>
+                  <span class="en">Limited customization &amp; user permissions</span>
+                </div>
+                <div class="subreason">
+                  <span class="ar">نقص في المتطلبات المالية والمحاسبية</span>
+                  <span class="en">Missing financial &amp; accounting requirements</span>
+                </div>
+                <div class="subreason">
+                  <span class="ar">احتياجات خاصة بالقطاع غير مدعومة</span>
+                  <span class="en">Sector-specific needs not supported</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== /REJECTED ===== -->
+
+      <div class="panel" style="margin-top:14px">
+        <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+        <ol class="resp">
+          <li><div><div class="ar">متابعة استخدام العميل للنظام من خلال Metabase والأدوات التحليلية</div><div class="en">Monitor client usage via Metabase and analytics tools</div></div></li>
+          <li><div><div class="ar">رصد Health Score وتحديده بشكل دوري (Green / Yellow / Orange / Red)</div><div class="en">Track Health Score (Green/Yellow/Orange/Red)</div></div></li>
+          <li><div><div class="ar">التدخل الاستباقي عند انخفاض معدلات الاستخدام أو ظهور خطر</div><div class="en">Proactively intervene when usage drops</div></div></li>
+          <li><div><div class="ar">بناء علاقة استراتيجية مع العميل لتعزيز الولاء والاستمرارية</div><div class="en">Build a strategic relationship for retention</div></div></li>
+          <li><div><div class="ar">تقديم مراجعات دورية (QBR) وعرض قيمة النظام بالأرقام</div><div class="en">Deliver periodic QBRs with value metrics</div></div></li>
+          <li><div><div class="ar">توثيق حالة العميل وتحديث Book of Business بانتظام</div><div class="en">Document client status and update Book of Business</div></div></li>
+          <li><div><div class="ar">تصنيف أسباب الرفض بدقة عند اختيار Rejected في أي مستوى</div><div class="en">Accurately classify rejection reasons when Rejected is selected</div></div></li>
+        </ol>
+      </div>
+
+      <div class="panel" style="margin-top:14px">
+        <h4><span class="dot"></span>درجات التشغيل والاستخدام | Maturity Score</h4>
+        <div class="maturity">
+          <div class="mat l1"><div class="num">1</div><div class="lbl">Adoption Started</div></div>
+          <div class="mat l2"><div class="num">2</div><div class="lbl">Daily Use</div></div>
+          <div class="mat l3"><div class="num">3</div><div class="lbl">Feature Activation</div></div>
+          <div class="mat l4"><div class="num">4</div><div class="lbl">Adopted</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STAGE 7: Renewal -->
+  <section id="s7" class="stage">
+    <div class="stage-head">
+      <div class="stage-num c7">7</div>
+      <div class="stage-titles">
+        <h3>حان وقت التجديد</h3>
+        <div class="en">Due for Renewal</div>
+      </div>
+    </div>
+    <div class="stage-body">
+      <p class="stage-desc">مرحلة انتهاء فترة اشتراك العميل والبدء في عملية التجديد، تتضمن إدارة QBR ومنع عدم التجديد.<br><span class="en" style="color:var(--muted)">The stage where the subscription period ends and the renewal process begins — includes QBR management and churn prevention.</span></p>
+      <div class="two-col">
+        <div class="panel">
+          <h4><span class="dot"></span>المراحل الفرعية | Sub Stages</h4>
+          <div class="subs">
+            <span class="sub purple"><span class="ar">QBR متأخر +90 يوم</span><span class="en">QBR Overdue (90+)</span></span>
+            <span class="sub info"><span class="ar">QBR مكتمل</span><span class="en">QBR Completed</span></span>
+            <span class="sub warn"><span class="ar">مرحلة التفاوض</span><span class="en">Negotiation</span></span>
+            <span class="sub danger"><span class="ar">تم الإلغاء</span><span class="en">Churned</span></span>
+            <span class="sub success"><span class="ar">تم التجديد</span><span class="en">Renewed</span></span>
+          </div>
+        </div>
+        <div class="panel">
+          <h4><span class="dot"></span>دور موظف نجاح العملاء | CSM Responsibilities</h4>
+          <ol class="resp">
+            <li><div><div class="ar">رصد العملاء الذين اقترب موعد تجديدهم وتنبيه الفريق المعني</div><div class="en">Identify clients approaching renewal and alert the team</div></div></li>
+            <li><div><div class="ar">التنسيق مع قسم التجديد ومتابعة عملية تجديد اشتراك العميل</div><div class="en">Coordinate with the renewal team</div></div></li>
+            <li><div><div class="ar">تقديم ملخص عن أداء العميل خلال فترة الاشتراك لدعم عملية التجديد</div><div class="en">Provide a performance summary to support renewal</div></div></li>
+            <li><div><div class="ar">توثيق نتيجة التجديد (تم التجديد / تم الإلغاء) في النظام</div><div class="en">Document the outcome (Renewed / Churned)</div></div></li>
+          </ol>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <div class="footer">
+    صادر عن قسم ضمان الجودة | Issued by the Quality Assurance Department<br>
+    تقرير مراحل CSM — V2 — مايو 2026
+  </div>
+
+</main>
+
+<script>
+// Search filter
+const q = document.getElementById('q');
+const stages = document.querySelectorAll('main section.stage, section#rejected, section#s6');
+q && q.addEventListener('input', () => {
+  const term = q.value.trim().toLowerCase();
+  document.querySelectorAll('main > section').forEach(s => {
+    if(s.id === 'overview') return;
+    const txt = s.textContent.toLowerCase();
+    s.style.display = !term || txt.includes(term) ? '' : 'none';
+  });
+});
+
+// Active nav highlight
+const navLinks = document.querySelectorAll('.nav a');
+const sections = [...document.querySelectorAll('main section[id]')];
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 120;
+  let cur = sections[0]?.id;
+  for(const s of sections){
+    if(s.offsetTop <= y) cur = s.id;
+  }
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+});
+
+// Smooth scroll
+navLinks.forEach(a => a.addEventListener('click', e => {
+  const id = a.getAttribute('href');
+  if(id && id.startsWith('#')){
+    e.preventDefault();
+    document.querySelector(id)?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}));
+</script>
+
+</body>
+</html>
